@@ -1,0 +1,3 @@
+package br.com.dluche.cryptocoinviewercompose.common
+
+class AppCoroutinesDispatchersImpl: AppCoroutinesDispatchers

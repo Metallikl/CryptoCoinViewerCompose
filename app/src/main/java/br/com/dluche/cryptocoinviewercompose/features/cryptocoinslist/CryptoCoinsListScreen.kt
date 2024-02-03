@@ -3,7 +3,6 @@ package br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,9 +16,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.outlined.Casino
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.GeneratingTokens
+import androidx.compose.material.icons.outlined.MonetizationOn
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,7 +45,6 @@ import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoinType
 
 //
 @ExperimentalMaterial3Api
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CryptoCoinListScreen(
     modifier: Modifier = Modifier,
@@ -134,7 +134,7 @@ private fun CryptoCoinListContent(modifier: Modifier, uiState: CryptoCoinListSta
         modifier = modifier
             .fillMaxSize()
     ) {
-        LazyColumn() {
+        LazyColumn {
             items(uiState.cryptoCoinList) { coin ->
                 CryptoCoinCell(coin)
             }
@@ -182,27 +182,34 @@ private fun CryptoCoinCell(coin: CryptoCoin) {
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth()
-        ){
+        ) {
             Icon(
-                imageVector = Icons.Outlined.CheckCircle,
+                imageVector = cryptoCoinIconHandler(coin),
                 contentDescription = null,
-                tint = if(coin.type == CryptoCoinType.COIN) Color.Green else Color.Red.copy(alpha = 0.8f)
+                tint = Color.DarkGray
             )
 
             Icon(
-                imageVector = Icons.Outlined.AccountCircle,
+                imageVector = Icons.Filled.Circle,
                 contentDescription = null,
-                tint = if(coin.isActive) Color.Green else Color.Red.copy(alpha = 0.8f)
+                tint = if (coin.isActive) Color.Green else Color.Red.copy(alpha = 0.8f)
             )
         }
     }
 }
 
+private fun cryptoCoinIconHandler(coin: CryptoCoin) =
+    when (coin.type) {
+        CryptoCoinType.COIN -> Icons.Outlined.MonetizationOn
+        CryptoCoinType.TOKEN -> Icons.Outlined.GeneratingTokens
+        CryptoCoinType.UNDEFINED -> Icons.Outlined.Casino
+    }
+
 @ExperimentalMaterial3Api
 @Composable
 @Preview
 private fun CryptoCoinScreenPreview() {
-    CryptoCoinListScreen(uiState = CryptoCoinListState())
+    CryptoCoinListScreen(uiState = CryptoCoinListState(cryptoCoinList = getCryptoCoinList()))
 }
 
 @Composable
@@ -215,8 +222,122 @@ private fun CryptoCoinCellPreview() {
             symbol = "XPTO",
             isNew = true,
             rank = 1000,
-            isActive = true
+            isActive = true,
+            type = CryptoCoinType.UNDEFINED
         )
     )
 }
+
+private fun getCryptoCoinList() = listOf(
+    CryptoCoin(
+        id = "XPTO",
+        name = "XisPiriTo",
+        symbol = "XPTO",
+        isNew = true,
+        rank = 1000,
+        isActive = true,
+        type = CryptoCoinType.COIN
+    ),
+    CryptoCoin(
+        id = "DOGC",
+        name = "DogeCoin",
+        symbol = "DOGC",
+        isNew = false,
+        rank = 500,
+        isActive = true,
+        type = CryptoCoinType.TOKEN
+    ),
+    CryptoCoin(
+        id = "CtC",
+        name = "CatCoin",
+        symbol = "CATCO",
+        isNew = true,
+        rank = 10000,
+        isActive = false,
+        type = CryptoCoinType.UNDEFINED
+    ),
+    CryptoCoin(
+        id = "XPTO",
+        name = "XisPiriTo",
+        symbol = "XPTO",
+        isNew = true,
+        rank = 1000,
+        isActive = true,
+        type = CryptoCoinType.COIN
+    ),
+    CryptoCoin(
+        id = "DOGC",
+        name = "DogeCoin",
+        symbol = "DOGC",
+        isNew = false,
+        rank = 500,
+        isActive = true,
+        type = CryptoCoinType.TOKEN
+    ),
+    CryptoCoin(
+        id = "CtC",
+        name = "CatCoin",
+        symbol = "CATCO",
+        isNew = true,
+        rank = 10000,
+        isActive = false,
+        type = CryptoCoinType.UNDEFINED
+    ),
+    CryptoCoin(
+        id = "XPTO",
+        name = "XisPiriTo",
+        symbol = "XPTO",
+        isNew = true,
+        rank = 1000,
+        isActive = true,
+        type = CryptoCoinType.COIN
+    ),
+    CryptoCoin(
+        id = "DOGC",
+        name = "DogeCoin",
+        symbol = "DOGC",
+        isNew = false,
+        rank = 500,
+        isActive = true,
+        type = CryptoCoinType.TOKEN
+    ),
+    CryptoCoin(
+        id = "CtC",
+        name = "CatCoin",
+        symbol = "CATCO",
+        isNew = true,
+        rank = 10000,
+        isActive = false,
+        type = CryptoCoinType.UNDEFINED
+    ),
+    CryptoCoin(
+        id = "XPTO",
+        name = "XisPiriTo",
+        symbol = "XPTO",
+        isNew = true,
+        rank = 1000,
+        isActive = true,
+        type = CryptoCoinType.COIN
+    ),
+    CryptoCoin(
+        id = "DOGC",
+        name = "DogeCoin",
+        symbol = "DOGC",
+        isNew = false,
+        rank = 500,
+        isActive = true,
+        type = CryptoCoinType.TOKEN
+    ),
+    CryptoCoin(
+        id = "CtC",
+        name = "CatCoin",
+        symbol = "CATCO",
+        isNew = true,
+        rank = 10000,
+        isActive = false,
+        type = CryptoCoinType.UNDEFINED
+    )
+
+
+)
 
