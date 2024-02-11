@@ -1,8 +1,8 @@
 package br.com.dluche.cryptocoinviewercompose.data.datasource
 
-import br.com.dluche.cryptocoinviewercompose.data.database.dao.CryptoCoinDao
-import br.com.dluche.criptocoinviewer.data.model.entity.CryptoCoinEntity
+import br.com.dluche.cryptocoinviewercompose.data.model.entity.CryptoCoinEntity
 import br.com.dluche.cryptocoinviewercompose.common.EitherResult
+import br.com.dluche.cryptocoinviewercompose.data.database.dao.CryptoCoinDao
 
 class CryptoCoinLocalDataSourceImpl(
     private val coinDao: CryptoCoinDao

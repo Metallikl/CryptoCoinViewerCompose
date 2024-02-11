@@ -3,7 +3,7 @@ package br.com.dluche.cryptocoinviewercompose.data.database.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import br.com.dluche.criptocoinviewer.data.model.entity.CryptoCoinEntity
+import br.com.dluche.cryptocoinviewercompose.data.model.entity.CryptoCoinEntity
 
 @Dao
 interface CryptoCoinDao {

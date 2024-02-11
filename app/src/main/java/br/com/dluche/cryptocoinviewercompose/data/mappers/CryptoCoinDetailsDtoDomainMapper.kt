@@ -1,14 +1,14 @@
-package br.com.dluche.criptocoinviewer.data.mappers
+package br.com.dluche.cryptocoinviewercompose.data.mappers
 
-import br.com.dluche.criptocoinviewer.common.Mapper
-import br.com.dluche.criptocoinviewer.data.model.response.crypto_coin_detail.CryptoDetailsDto
-import br.com.dluche.criptocoinviewer.data.model.response.crypto_coin_detail.TagDto
-import br.com.dluche.criptocoinviewer.data.model.response.crypto_coin_detail.TeamDto
-import br.com.dluche.criptocoinviewer.domain.model.CryptoCoinDetails
-import br.com.dluche.criptocoinviewer.domain.model.Tag
-import br.com.dluche.criptocoinviewer.domain.model.Team
-import br.com.dluche.criptocoinviewer.extensions.orDefault
-import br.com.dluche.criptocoinviewer.extensions.orFalse
+import br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_detail.CryptoDetailsDto
+import br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_detail.TagDto
+import br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_detail.TeamDto
+import br.com.dluche.cryptocoinviewercompose.common.Mapper
+import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoinDetails
+import br.com.dluche.cryptocoinviewercompose.domain.model.Tag
+import br.com.dluche.cryptocoinviewercompose.domain.model.Team
+import br.com.dluche.cryptocoinviewercompose.extentions.orDefault
+import br.com.dluche.cryptocoinviewercompose.extentions.orFalse
 
 class CryptoCoinDetailsDtoDomainMapper : Mapper<CryptoDetailsDto, CryptoCoinDetails> {
     override fun mapTo(from: CryptoDetailsDto): CryptoCoinDetails {
@@ -23,7 +23,7 @@ class CryptoCoinDetailsDtoDomainMapper : Mapper<CryptoDetailsDto, CryptoCoinDeta
             message = from.message.orEmpty(),
             name = from.name.orEmpty(),
             openSource = from.openSource.orFalse(),
-            rank = from.rank?:0,
+            rank = from.rank ?: 0,
             startedAt = from.startedAt.orEmpty(),
             symbol = from.symbol.orEmpty(),
             tags = mapTags(from.tags.orEmpty()),

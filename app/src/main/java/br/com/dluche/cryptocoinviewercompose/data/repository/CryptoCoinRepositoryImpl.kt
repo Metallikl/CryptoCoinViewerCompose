@@ -1,23 +1,20 @@
-package br.com.dluche.criptocoinviewer.data.repository
+package br.com.dluche.cryptocoinviewercompose.data.repository
 
-import br.com.dluche.criptocoinviewer.common.EitherResult
+import br.com.dluche.cryptocoinviewercompose.data.mappers.CryptoCoinDetailsDtoDomainMapper
+import br.com.dluche.cryptocoinviewercompose.data.mappers.CryptoCoinDtoToEntityMapper
+import br.com.dluche.cryptocoinviewercompose.data.mappers.CryptoCoinEntityDomainMapper
+import br.com.dluche.cryptocoinviewercompose.common.EitherResult
 import br.com.dluche.cryptocoinviewercompose.data.datasource.CryptoCoinLocalDataSource
-import br.com.dluche.criptocoinviewer.data.datasource.CryptoCoinRemoteDataSource
-import br.com.dluche.criptocoinviewer.data.mappers.CryptoCoinDtoDomainMapper
-import br.com.dluche.criptocoinviewer.data.mappers.CryptoCoinDetailsDtoDomainMapper
-import br.com.dluche.criptocoinviewer.data.mappers.CryptoCoinDtoToEntityMapper
-import br.com.dluche.criptocoinviewer.data.mappers.CryptoCoinEntityDomainMapper
-import br.com.dluche.criptocoinviewer.domain.model.CoinPaginationData
-import br.com.dluche.criptocoinviewer.domain.model.CryptoCoin
-import br.com.dluche.criptocoinviewer.domain.model.CryptoCoinDetails
-import br.com.dluche.criptocoinviewer.domain.repository.CryptoCoinRepository
-import javax.inject.Inject
+import br.com.dluche.cryptocoinviewercompose.data.datasource.CryptoCoinRemoteDataSource
+import br.com.dluche.cryptocoinviewercompose.domain.model.CoinPaginationData
+import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoin
+import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoinDetails
+import br.com.dluche.cryptocoinviewercompose.domain.repository.CryptoCoinRepository
 
 
-class CryptoCoinRepositoryImpl @Inject constructor(
+class CryptoCoinRepositoryImpl(
     private val remoteDataSource: CryptoCoinRemoteDataSource,
     private val localDataSource: CryptoCoinLocalDataSource,
-    private val cryptoCoinMapper: CryptoCoinDtoDomainMapper,
     private val cryptoCoinDetailsMapper: CryptoCoinDetailsDtoDomainMapper,
     private val cryptoCoinDtoToEntityMapper: CryptoCoinDtoToEntityMapper,
     private val cryptoCoinEntityToDomainMapper: CryptoCoinEntityDomainMapper,

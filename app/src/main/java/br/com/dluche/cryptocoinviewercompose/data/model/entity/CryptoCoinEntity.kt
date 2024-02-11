@@ -1,9 +1,10 @@
-package br.com.dluche.criptocoinviewer.data.model.entity
+package br.com.dluche.cryptocoinviewercompose.data.model.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import br.com.dluche.criptocoinviewer.extensions.emptyString
+import br.com.dluche.cryptocoinviewercompose.extentions.emptyString
+
 
 @Entity(tableName = "crypto_coins")
 data class CryptoCoinEntity(

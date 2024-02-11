@@ -1,22 +1,24 @@
-package br.com.dluche.criptocoinviewer.data.model.response.crypto_coin
+package br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin
 
 
-import br.com.dluche.criptocoinviewer.extensions.emptyString
-import com.google.gson.annotations.SerializedName
+import br.com.dluche.cryptocoinviewercompose.extentions.emptyString
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CryptoCoinDto(
-    @SerializedName("id")
+    @SerialName("id")
     val id: String = String.emptyString(),
-    @SerializedName("is_active")
+    @SerialName("is_active")
     val isActive: Boolean = false,
-    @SerializedName("is_new")
+    @SerialName("is_new")
     val isNew: Boolean = false,
-    @SerializedName("name")
+    @SerialName("name")
     val name: String = String.emptyString(),
-    @SerializedName("rank")
+    @SerialName("rank")
     val rank: Int = 0,
-    @SerializedName("symbol")
+    @SerialName("symbol")
     val symbol: String = String.emptyString(),
-    @SerializedName("type")
+    @SerialName("type")
     val type: String = String.emptyString()
 )

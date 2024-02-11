@@ -1,10 +1,8 @@
-package br.com.dluche.criptocoinviewer.data.mappers
+package br.com.dluche.cryptocoinviewercompose.data.mappers
 
-import br.com.dluche.criptocoinviewer.common.Mapper
-import br.com.dluche.criptocoinviewer.data.model.entity.CryptoCoinEntity
-import br.com.dluche.criptocoinviewer.data.model.response.crypto_coin.CryptoCoinDto
-import br.com.dluche.criptocoinviewer.domain.model.CryptoCoin
-import br.com.dluche.criptocoinviewer.extensions.toInt
+import br.com.dluche.cryptocoinviewercompose.data.model.entity.CryptoCoinEntity
+import br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin.CryptoCoinDto
+import br.com.dluche.cryptocoinviewercompose.common.Mapper
 
 class CryptoCoinDtoToEntityMapper : Mapper<List<CryptoCoinDto>, List<CryptoCoinEntity>> {
     override fun mapTo(from: List<CryptoCoinDto>): List<CryptoCoinEntity> {

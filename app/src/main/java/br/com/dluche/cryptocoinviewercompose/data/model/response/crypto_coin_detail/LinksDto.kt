@@ -1,4 +1,4 @@
-package br.com.dluche.criptocoinviewer.data.model.response.crypto_coin_detail
+package br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_detail
 
 
 import com.google.gson.annotations.SerializedName

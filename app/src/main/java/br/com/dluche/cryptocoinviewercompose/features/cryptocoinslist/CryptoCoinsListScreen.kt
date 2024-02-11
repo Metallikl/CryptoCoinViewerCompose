@@ -134,7 +134,9 @@ private fun CryptoCoinListContent(modifier: Modifier, uiState: CryptoCoinListSta
         modifier = modifier
             .fillMaxSize()
     ) {
-        LazyColumn {
+        LazyColumn(
+            modifier = modifier.padding(16.dp)
+        ) {
             items(uiState.cryptoCoinList) { coin ->
                 CryptoCoinCell(coin)
             }
@@ -337,7 +339,5 @@ private fun getCryptoCoinList() = listOf(
         isActive = false,
         type = CryptoCoinType.UNDEFINED
     )
-
-
 )
 

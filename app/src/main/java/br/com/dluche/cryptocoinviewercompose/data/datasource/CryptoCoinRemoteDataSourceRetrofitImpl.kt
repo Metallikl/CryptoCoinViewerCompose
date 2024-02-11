@@ -1,13 +1,13 @@
-package br.com.dluche.criptocoinviewer.data.datasource
+package br.com.dluche.cryptocoinviewercompose.data.datasource
 
+import br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin.CryptoCoinDto
+import br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_detail.CryptoDetailsDto
+import br.com.dluche.cryptocoinviewercompose.common.EitherResult
 import br.com.dluche.cryptocoinviewercompose.data.api.PaprikaCoinApi
-import br.com.dluche.criptocoinviewer.common.EitherResult
-import br.com.dluche.criptocoinviewer.data.model.response.crypto_coin.CryptoCoinDto
-import br.com.dluche.criptocoinviewer.data.model.response.crypto_coin_detail.CryptoDetailsDto
-import javax.inject.Inject
 
-class CryptoCoinRemoteDataSourceImpl @Inject constructor(
+class CryptoCoinRemoteDataSourceRetrofitImpl(
     private val api: PaprikaCoinApi
+
 ) : CryptoCoinRemoteDataSource {
     override suspend fun getCoins(): EitherResult<List<CryptoCoinDto>> {
         return try {

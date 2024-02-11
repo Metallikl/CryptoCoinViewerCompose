@@ -1,6 +1,6 @@
 package br.com.dluche.cryptocoinviewercompose.data.datasource
 
-import br.com.dluche.criptocoinviewer.data.model.entity.CryptoCoinEntity
+import br.com.dluche.cryptocoinviewercompose.data.model.entity.CryptoCoinEntity
 import br.com.dluche.cryptocoinviewercompose.common.EitherResult
 
 interface CryptoCoinLocalDataSource {

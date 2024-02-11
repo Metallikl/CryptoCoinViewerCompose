@@ -1,7 +1,6 @@
-package br.com.dluche.criptocoinviewer.data.model.response.crypto_coin_detail
+package br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_detail
 
-
-import br.com.dluche.criptocoinviewer.extensions.emptyString
+import br.com.dluche.cryptocoinviewercompose.extentions.emptyString
 import com.google.gson.annotations.SerializedName
 
 data class TagDto(
