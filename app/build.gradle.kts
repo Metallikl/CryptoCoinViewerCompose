@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.retrofit.gson.converter)
     implementation(libs.gson)
     implementation(platform(libs.okhttp.bom))
+    implementation(libs.coil)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
