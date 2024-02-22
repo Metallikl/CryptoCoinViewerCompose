@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
                 val viewmodel = koinViewModel<CryptoCoinListViewModel>()
                 val uiState by viewmodel.uiState.collectAsState()
                CryptoCoinListScreen(
-                   uiState =  CryptoCoinListState(uiState.cryptoCoinList)
+                   uiState =  uiState
                )
             }
         }
