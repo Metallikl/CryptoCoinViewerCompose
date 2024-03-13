@@ -1,6 +1,7 @@
 package br.com.dluche.cryptocoinviewercompose.application
 
 import android.app.Application
+import br.com.dluche.cryptocoinviewercompose.di.appModule
 import br.com.dluche.cryptocoinviewercompose.di.cryptoCoinListModule
 import br.com.dluche.cryptocoinviewercompose.di.databaseModule
 import br.com.dluche.cryptocoinviewercompose.di.networkModule
@@ -18,12 +19,12 @@ class CryptoCoinViewerApp : Application() {
             androidContext(this@CryptoCoinViewerApp)
             modules(
                 listOf(
+                    appModule,
                     networkModule,
                     databaseModule,
                     cryptoCoinListModule
                 )
             )
-
         }
     }
 }

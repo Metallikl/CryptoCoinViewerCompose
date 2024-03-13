@@ -1,8 +1,8 @@
 package br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,29 +18,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.outlined.Casino
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.GeneratingTokens
 import androidx.compose.material.icons.outlined.MonetizationOn
 import androidx.compose.material.icons.outlined.QueryStats
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoin
 import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoinType
+import androidx.compose.runtime.LaunchedEffect as LaunchedEffect1
 
 //
 @ExperimentalMaterial3Api
@@ -66,89 +67,93 @@ fun CryptoCoinListScreen(
 ) {
     Scaffold(
         topBar = {
-            var titleVisibility by remember {
-                mutableStateOf(true)
-            }
             TopAppBar(
                 title = {
-                    AnimatedVisibility(visible = titleVisibility) {
-                        Text(text = "CryptoCoin Viewer")
-                    }
+                    Text(text = "CryptoCoin Viewer")
                 },
-                actions = {
-                    var isSearchTextFieldVisible by remember {
-                        mutableStateOf(false)
-                    }
-                    var text by remember {
-                        mutableStateOf("")
-                    }
-
-                    AnimatedVisibility(visible = !isSearchTextFieldVisible) {
-                        Icon(
-                            imageVector = Icons.Outlined.Search,
-                            contentDescription = null,
-                            Modifier
-                                .padding(10.dp)
-                                .clickable {
-                                    isSearchTextFieldVisible = true
-                                    titleVisibility = !isSearchTextFieldVisible
-                                }
-                        )
-                    }
-                    AnimatedVisibility(visible = isSearchTextFieldVisible) {
-                        Icon(
-                            imageVector = Icons.Outlined.Close,
-                            contentDescription = null,
-                            Modifier
-                                .padding(10.dp)
-                                .clickable {
-                                    isSearchTextFieldVisible = false
-                                    text = ""
-                                    titleVisibility = !isSearchTextFieldVisible
-                                }
-                        )
-                    }
-
-                    BasicTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        },
-                        Modifier.fillMaxWidth(
-                            animateFloatAsState(
-                                targetValue = if (isSearchTextFieldVisible) 1f else 0f,
-                                label = "largura animada do campo de texto"
-                            ).value
-                        ),
-                        decorationBox = { innerTextField ->
-                            if (text.isEmpty()) {
-                                Text(
-                                    text = "Nome da crypto",
-                                    style = TextStyle.Default.copy(
-                                        color = Color.Gray.copy(0.5f),
-                                        fontStyle = FontStyle.Italic
-                                    )
-                                )
-
-                            }
-                            innerTextField()
-                        }
-                    )
-                }
+//                actions = {
+//                    var isSearchTextFieldVisible by remember {
+//                        mutableStateOf(false)
+//                    }
+//                    var text by remember {
+//                        mutableStateOf("")
+//                    }
+//
+//                    AnimatedVisibility(visible = !isSearchTextFieldVisible) {
+//                        Icon(
+//                            imageVector = Icons.Outlined.Search,
+//                            contentDescription = null,
+//                            Modifier
+//                                .padding(10.dp)
+//                                .clickable {
+//                                    isSearchTextFieldVisible = true
+//                                    titleVisibility = !isSearchTextFieldVisible
+//                                }
+//                        )
+//                    }
+//                    AnimatedVisibility(visible = isSearchTextFieldVisible) {
+//                        Icon(
+//                            imageVector = Icons.Outlined.Close,
+//                            contentDescription = null,
+//                            Modifier
+//                                .padding(10.dp)
+//                                .clickable {
+//                                    isSearchTextFieldVisible = false
+//                                    text = ""
+//                                    titleVisibility = !isSearchTextFieldVisible
+//                                }
+//                        )
+//                    }
+//
+//                    BasicTextField(
+//                        value = text,
+//                        onValueChange = {
+//                            text = it
+//                        },
+//                        Modifier.fillMaxWidth(
+//                            animateFloatAsState(
+//                                targetValue = if (isSearchTextFieldVisible) 1f else 0f,
+//                                label = "largura animada do campo de texto"
+//                            ).value
+//                        ),
+//                        decorationBox = { innerTextField ->
+//                            if (text.isEmpty()) {
+//                                Text(
+//                                    text = "Nome da crypto",
+//                                    style = TextStyle.Default.copy(
+//                                        color = Color.Gray.copy(0.5f),
+//                                        fontStyle = FontStyle.Italic
+//                                    )
+//                                )
+//
+//                            }
+//                            innerTextField()
+//                        }
+//                    )
+//                }
             )
         },
     ) { paddingValues ->
-        when {
-            uiState.isLoading -> {
-                CryptoCoinListLoadingContent(uiState, modifier.padding(paddingValues))
-            }
+        Column {
+            SearchBar(
+                uiState = uiState,
+                modifier = modifier.padding(paddingValues)
+            )
+            when {
+                uiState.isLoading || uiState.isLoadingNextPage -> {
+                    CryptoCoinListLoadingContent(uiState, modifier.padding(paddingValues))
+                }
 
-            uiState.isError -> {
-                ErrorDialogContent(uiState, modifier.padding(paddingValues))
-            }
+                uiState.isError || uiState.isErrorNextPage -> {
+                    ErrorDialogContent(uiState, modifier.padding(paddingValues))
+                }
 
-            else -> {
-                CryptoCoinListContent(modifier = modifier.padding(paddingValues), uiState = uiState)
+                else -> {
+                    CryptoCoinListContent(
+                        modifier = modifier.padding(paddingValues),
+                        uiState = uiState
+                    )
+                }
             }
         }
     }
@@ -173,11 +178,22 @@ private fun CryptoCoinListContent(uiState: CryptoCoinListState, modifier: Modifi
         modifier = modifier
             .fillMaxSize()
     ) {
+        val listState = rememberLazyListState()
+        val triggerNextPage by remember {
+            derivedStateOf {
+                !listState.canScrollForward && listState.firstVisibleItemIndex != 0
+            }
+        }
         LazyColumn(
+            state = listState,
             modifier = modifier.padding(16.dp)
         ) {
             items(uiState.cryptoCoinList) { coin ->
                 CryptoCoinCell(coin)
+            }
+
+            if(triggerNextPage){
+                uiState.onScrollEnds
             }
         }
     }
@@ -240,7 +256,10 @@ private fun CryptoCoinCell(coin: CryptoCoin, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SearchBar(onSearchClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SearchBar(
+    uiState: CryptoCoinListState,
+    modifier: Modifier = Modifier
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -248,17 +267,29 @@ fun SearchBar(onSearchClick: () -> Unit, modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .height(48.dp)
             .padding(4.dp)
+            .background(
+                color = MaterialTheme.colorScheme.secondary
+            )
     ) {
-        var inputText by remember {
-            mutableStateOf("")
-        }
         BasicTextField(
-            value = inputText,
-            onValueChange = { inputText = it },
-            modifier = Modifier.weight(2f)
-        ) {
-
-        }
+            value = uiState.search.orEmpty(),
+            onValueChange = {
+                uiState.onSearchTextChange(it)
+            },
+            modifier = Modifier.weight(2f),
+            decorationBox = { innerTextField ->
+                if (uiState.search.orEmpty().isEmpty()) {
+                    Text(
+                        text = "Nome da crypto",
+                        style = TextStyle.Default.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontStyle = FontStyle.Italic
+                        )
+                    )
+                }
+                innerTextField()
+            }
+        )
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
         Icon(
             imageVector = Icons.Outlined.QueryStats,
@@ -266,16 +297,19 @@ fun SearchBar(onSearchClick: () -> Unit, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .padding(horizontal = 8.dp)
                 .clickable {
-                    onSearchClick()
+                    uiState.onSearchClick()
                 }
         )
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun SearchBarPreview() {
-    SearchBar({})
+    SearchBar(CryptoCoinListState())
 }
 
 
