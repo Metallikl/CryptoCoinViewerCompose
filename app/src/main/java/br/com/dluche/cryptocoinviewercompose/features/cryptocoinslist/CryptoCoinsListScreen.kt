@@ -39,14 +39,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -56,7 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoin
 import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoinType
-import androidx.compose.runtime.LaunchedEffect as LaunchedEffect1
+import br.com.dluche.cryptocoinviewercompose.extentions.orDefault
 
 //
 @ExperimentalMaterial3Api
@@ -178,22 +177,36 @@ private fun CryptoCoinListContent(uiState: CryptoCoinListState, modifier: Modifi
         modifier = modifier
             .fillMaxSize()
     ) {
+        val threshold = remember { 5 }
         val listState = rememberLazyListState()
-        val triggerNextPage by remember {
+        val isLastItemVisible by remember {
             derivedStateOf {
-                !listState.canScrollForward && listState.firstVisibleItemIndex != 0
+                //!listState.canScrollForward && listState.firstVisibleItemIndex != 0
+                val layoutInfo = listState.layoutInfo
+                val totalItems = layoutInfo.totalItemsCount
+                val lastVisibleItemIndex =
+                    (layoutInfo.visibleItemsInfo.lastOrNull()?.index.orDefault()).plus(1)
+                lastVisibleItemIndex > (totalItems - threshold)
+
             }
         }
+        val isLoadingSomething by remember{
+            derivedStateOf {
+                (uiState.isLoading || uiState.isLoadingNextPage)
+            }
+        }
+        LaunchedEffect(key1 = isLastItemVisible) {
+            if(isLastItemVisible && !isLoadingSomething) {
+                uiState.onScrollEnds()
+            }
+        }
+
         LazyColumn(
             state = listState,
             modifier = modifier.padding(16.dp)
         ) {
             items(uiState.cryptoCoinList) { coin ->
                 CryptoCoinCell(coin)
-            }
-
-            if(triggerNextPage){
-                uiState.onScrollEnds
             }
         }
     }
