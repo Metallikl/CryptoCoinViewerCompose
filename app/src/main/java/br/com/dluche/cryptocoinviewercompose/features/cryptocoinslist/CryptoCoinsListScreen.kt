@@ -53,16 +53,36 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoin
 import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoinType
 import br.com.dluche.cryptocoinviewercompose.extentions.orDefault
+import br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist.CryptoCoinListEvent.LoadNextPage
+import br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist.CryptoCoinListEvent.SearchClick
+import br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist.CryptoCoinListEvent.SearchTextChange
+import br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist.CryptoCoinListEvent.TryAgain
+import org.koin.androidx.compose.koinViewModel
 
-//
+
+@ExperimentalMaterial3Api
+@Composable
+fun CryptoCoinListRoute() {
+    val viewmodel = koinViewModel<CryptoCoinListViewModel>()
+    val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
+
+    CryptoCoinListScreen(
+        uiState = uiState,
+        onEvent = viewmodel::onEvent
+    )
+}
+
+
 @ExperimentalMaterial3Api
 @Composable
 fun CryptoCoinListScreen(
-    modifier: Modifier = Modifier,
-    uiState: CryptoCoinListState
+    uiState: CryptoCoinListState,
+    onEvent: (CryptoCoinListEvent) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Scaffold(
         topBar = {
@@ -133,24 +153,29 @@ fun CryptoCoinListScreen(
             )
         },
     ) { paddingValues ->
-        Column {
+        Column(
+            modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
             SearchBar(
                 uiState = uiState,
-                modifier = modifier.padding(paddingValues)
+                onEvent = onEvent
             )
             when {
                 uiState.isLoading || uiState.isLoadingNextPage -> {
-                    CryptoCoinListLoadingContent(uiState, modifier.padding(paddingValues))
+                    CryptoCoinListLoadingContent()
                 }
 
                 uiState.isError || uiState.isErrorNextPage -> {
-                    ErrorDialogContent(uiState, modifier.padding(paddingValues))
+                    ErrorDialogContent(uiState, onEvent, modifier.padding(paddingValues))
                 }
 
                 else -> {
                     CryptoCoinListContent(
-                        modifier = modifier.padding(paddingValues),
-                        uiState = uiState
+                        uiState = uiState,
+                        onEvent = onEvent
                     )
                 }
             }
@@ -159,23 +184,29 @@ fun CryptoCoinListScreen(
 }
 
 @Composable
-fun CryptoCoinListLoadingContent(uiState: CryptoCoinListState, modifier: Modifier) {
+fun CryptoCoinListLoadingContent(
+    modifier: Modifier = Modifier
+) {
     Column(
+        modifier = modifier
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxSize()
     ) {
         CircularProgressIndicator(
-            modifier.fillMaxSize(0.5f)
+            Modifier.fillMaxSize(0.5f)
         )
     }
 }
 
 @Composable
-private fun CryptoCoinListContent(uiState: CryptoCoinListState, modifier: Modifier) {
+private fun CryptoCoinListContent(
+    uiState: CryptoCoinListState,
+    onEvent: (CryptoCoinListEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
-            .fillMaxSize()
     ) {
         val threshold = remember { 5 }
         val listState = rememberLazyListState()
@@ -190,20 +221,20 @@ private fun CryptoCoinListContent(uiState: CryptoCoinListState, modifier: Modifi
 
             }
         }
-        val isLoadingSomething by remember{
+        val isLoadingSomething by remember {
             derivedStateOf {
                 (uiState.isLoading || uiState.isLoadingNextPage)
             }
         }
         LaunchedEffect(key1 = isLastItemVisible) {
-            if(isLastItemVisible && !isLoadingSomething) {
-                uiState.onScrollEnds()
+            if (isLastItemVisible && !isLoadingSomething) {
+                onEvent(LoadNextPage)
             }
         }
 
         LazyColumn(
             state = listState,
-            modifier = modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             items(uiState.cryptoCoinList) { coin ->
                 CryptoCoinCell(coin)
@@ -271,6 +302,7 @@ private fun CryptoCoinCell(coin: CryptoCoin, modifier: Modifier = Modifier) {
 @Composable
 fun SearchBar(
     uiState: CryptoCoinListState,
+    onEvent: (CryptoCoinListEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -287,7 +319,7 @@ fun SearchBar(
         BasicTextField(
             value = uiState.search.orEmpty(),
             onValueChange = {
-                uiState.onSearchTextChange(it)
+                onEvent(SearchTextChange(it))
             },
             modifier = Modifier.weight(2f),
             decorationBox = { innerTextField ->
@@ -310,7 +342,7 @@ fun SearchBar(
             modifier = Modifier
                 .padding(horizontal = 8.dp)
                 .clickable {
-                    uiState.onSearchClick()
+                    onEvent(SearchClick)
                 }
         )
     }
@@ -322,12 +354,19 @@ fun SearchBar(
 )
 @Composable
 fun SearchBarPreview() {
-    SearchBar(CryptoCoinListState())
+    SearchBar(
+        uiState = CryptoCoinListState(),
+        onEvent = {}
+    )
 }
 
 
 @Composable
-fun ErrorDialogContent(uiState: CryptoCoinListState, modifier: Modifier = Modifier) {
+fun ErrorDialogContent(
+    uiState: CryptoCoinListState,
+    onEvent: (CryptoCoinListEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -370,7 +409,7 @@ fun ErrorDialogContent(uiState: CryptoCoinListState, modifier: Modifier = Modifi
                 )
                 OutlinedButton(
                     onClick = {
-                        uiState.onTryAgain()
+                        onEvent(TryAgain)
                     },
                     modifier = Modifier.padding(vertical = 16.dp)
                 ) {
@@ -388,7 +427,10 @@ fun ErrorDialogContent(uiState: CryptoCoinListState, modifier: Modifier = Modifi
 @Preview(showBackground = true)
 @Composable
 fun ErrorDialogContentPreview() {
-    ErrorDialogContent(CryptoCoinListState(message = "Erro: sem internet"))
+    ErrorDialogContent(
+        uiState = CryptoCoinListState(message = "Erro: sem internet"),
+        onEvent = { }
+    )
 }
 
 private fun cryptoCoinIconHandler(coin: CryptoCoin) =
@@ -406,7 +448,8 @@ private fun CryptoCoinScreenPreview() {
         uiState = CryptoCoinListState(
             isError = true,
             cryptoCoinList = getCryptoCoinList()
-        )
+        ),
+        onEvent = { }
     )
 }
 

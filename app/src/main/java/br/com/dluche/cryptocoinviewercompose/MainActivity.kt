@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist.CryptoCoinListScreen
 import br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist.CryptoCoinListState
 import br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist.CryptoCoinListViewModel
+import br.com.dluche.cryptocoinviewercompose.navigation.CryptoCoinViewerComposeNavHost
 import br.com.dluche.cryptocoinviewercompose.ui.theme.CryptoCoinViewerComposeTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -23,28 +24,8 @@ class MainActivity : ComponentActivity() {
         //loadKoinModules(cryptoCoinListModule)
         setContent {
             CryptoCoinViewerComposeTheme {
-                val viewmodel = koinViewModel<CryptoCoinListViewModel>()
-                val uiState by viewmodel.uiState.collectAsState()
-               CryptoCoinListScreen(
-                   uiState =  uiState
-               )
+                CryptoCoinViewerComposeNavHost()
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CryptoCoinViewerComposeTheme {
-        Greeting("Android")
     }
 }

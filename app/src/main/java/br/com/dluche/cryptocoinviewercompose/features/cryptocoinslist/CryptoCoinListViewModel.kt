@@ -14,29 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class CryptoCoinListState(
-    val isLoading: Boolean = false,
-    val isError: Boolean = false,
-    val isLoadingNextPage: Boolean = false,
-    val isErrorNextPage: Boolean = false,
-    val search: String? = null,
-    val message: String = String.emptyString(),
-    val cryptoCoinList: List<CryptoCoin> = emptyList(),
-    val onTryAgain: () -> Unit = {},
-    val onSearchTextChange: (String) -> Unit = {},
-    val onSearchClick: () -> Unit = {},
-    val onScrollEnds: () -> Unit = {}
-)
-
-fun CryptoCoinListState.copyAndKeepFuns(newState: CryptoCoinListState): CryptoCoinListState {
-    return newState.copy(
-        onTryAgain = onTryAgain,
-        onSearchTextChange = onSearchTextChange,
-        onSearchClick = onSearchClick,
-        onScrollEnds = onScrollEnds
-    )
-}
-
 class CryptoCoinListViewModel(
     private val dispatchers: AppCoroutinesDispatchers,
     private val getCoins: GetCoinsUseCase,
@@ -47,38 +24,36 @@ class CryptoCoinListViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        setupLambda()
         fetchCoinsList()
     }
 
-    private fun setupLambda() {
-        _uiState.update { currState ->
-            currState.copy(
-                onTryAgain = {
-                    fetchCoinsList()
-                },
-                onSearchTextChange = { searchText ->
-                    _uiState.update {
-                        it.copy(search = searchText)
-                    }
-                },
-                onSearchClick = {
-                    filterCoins()
-                },
-                onScrollEnds = {
-                    getCoinsNextPage()
+    fun onEvent(event: CryptoCoinListEvent) {
+        when (event) {
+            is CryptoCoinListEvent.SearchTextChange -> {
+                _uiState.update {
+                    it.copy(search = event.searchText)
                 }
-            )
+            }
+
+            CryptoCoinListEvent.SearchClick -> {
+                filterCoins()
+            }
+
+            CryptoCoinListEvent.LoadNextPage -> {
+                getCoinsNextPage()
+            }
+
+            CryptoCoinListEvent.TryAgain -> {
+                fetchCoinsList()
+            }
         }
     }
 
     private fun fetchCoinsList() {
         viewModelScope.launch(dispatchers.io()) {
-            _uiState.update { curState ->
-                curState.copyAndKeepFuns(
-                    CryptoCoinListState(
-                        isLoading = true
-                    )
+            _uiState.update {
+                CryptoCoinListState(
+                    isLoading = true
                 )
             }
             getCoins(forceReset = true).collect { result ->
@@ -122,6 +97,8 @@ class CryptoCoinListViewModel(
                             curState.copy(
                                 isLoading = false,
                                 isError = false,
+                                isLoadingNextPage = false,
+                                isErrorNextPage = false,
                                 message = String.emptyString(),
                                 cryptoCoinList = result.data
                             )
@@ -164,11 +141,9 @@ class CryptoCoinListViewModel(
                                     it.addAll(result.data)
                                 }
                             //
-                            state.copyAndKeepFuns(
-                                CryptoCoinListState(
-                                    search = state.search,
-                                    cryptoCoinList = newCoinList.toList(),
-                                )
+                            CryptoCoinListState(
+                                search = state.search,
+                                cryptoCoinList = newCoinList.toList(),
                             )
                         }
                     }
