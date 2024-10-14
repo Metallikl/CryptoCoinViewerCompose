@@ -1,9 +1,7 @@
 package br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -81,8 +79,7 @@ fun CryptoCoinListRoute() {
 @Composable
 fun CryptoCoinListScreen(
     uiState: CryptoCoinListState,
-    onEvent: (CryptoCoinListEvent) -> Unit,
-    modifier: Modifier = Modifier
+    onEvent: (CryptoCoinListEvent) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -90,66 +87,6 @@ fun CryptoCoinListScreen(
                 title = {
                     Text(text = "CryptoCoin Viewer")
                 },
-//                actions = {
-//                    var isSearchTextFieldVisible by remember {
-//                        mutableStateOf(false)
-//                    }
-//                    var text by remember {
-//                        mutableStateOf("")
-//                    }
-//
-//                    AnimatedVisibility(visible = !isSearchTextFieldVisible) {
-//                        Icon(
-//                            imageVector = Icons.Outlined.Search,
-//                            contentDescription = null,
-//                            Modifier
-//                                .padding(10.dp)
-//                                .clickable {
-//                                    isSearchTextFieldVisible = true
-//                                    titleVisibility = !isSearchTextFieldVisible
-//                                }
-//                        )
-//                    }
-//                    AnimatedVisibility(visible = isSearchTextFieldVisible) {
-//                        Icon(
-//                            imageVector = Icons.Outlined.Close,
-//                            contentDescription = null,
-//                            Modifier
-//                                .padding(10.dp)
-//                                .clickable {
-//                                    isSearchTextFieldVisible = false
-//                                    text = ""
-//                                    titleVisibility = !isSearchTextFieldVisible
-//                                }
-//                        )
-//                    }
-//
-//                    BasicTextField(
-//                        value = text,
-//                        onValueChange = {
-//                            text = it
-//                        },
-//                        Modifier.fillMaxWidth(
-//                            animateFloatAsState(
-//                                targetValue = if (isSearchTextFieldVisible) 1f else 0f,
-//                                label = "largura animada do campo de texto"
-//                            ).value
-//                        ),
-//                        decorationBox = { innerTextField ->
-//                            if (text.isEmpty()) {
-//                                Text(
-//                                    text = "Nome da crypto",
-//                                    style = TextStyle.Default.copy(
-//                                        color = Color.Gray.copy(0.5f),
-//                                        fontStyle = FontStyle.Italic
-//                                    )
-//                                )
-//
-//                            }
-//                            innerTextField()
-//                        }
-//                    )
-//                }
             )
         },
     ) { paddingValues ->
@@ -169,7 +106,7 @@ fun CryptoCoinListScreen(
                 }
 
                 uiState.isError || uiState.isErrorNextPage -> {
-                    ErrorDialogContent(uiState, onEvent, modifier.padding(paddingValues))
+                    ErrorDialogContent(uiState, onEvent)
                 }
 
                 else -> {
@@ -245,16 +182,13 @@ private fun CryptoCoinListContent(
 
 @Composable
 private fun CryptoCoinCell(coin: CryptoCoin, modifier: Modifier = Modifier) {
-    Column(
+
+    Card(
+        shape = RoundedCornerShape(5.dp),
         modifier = modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
             .padding(8.dp)
-            .border(
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = Color.Gray.copy(0.5f)
-                ),
-                shape = RoundedCornerShape(5.dp)
-            )
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -364,8 +298,7 @@ fun SearchBarPreview() {
 @Composable
 fun ErrorDialogContent(
     uiState: CryptoCoinListState,
-    onEvent: (CryptoCoinListEvent) -> Unit,
-    modifier: Modifier = Modifier
+    onEvent: (CryptoCoinListEvent) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -377,7 +310,7 @@ fun ErrorDialogContent(
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 20.dp
             ),
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .height(IntrinsicSize.Min)
                 .padding(24.dp)
