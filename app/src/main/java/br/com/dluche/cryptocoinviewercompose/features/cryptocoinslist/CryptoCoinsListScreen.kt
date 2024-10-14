@@ -379,6 +379,31 @@ private fun cryptoCoinIconHandler(coin: CryptoCoin) =
 private fun CryptoCoinScreenPreview() {
     CryptoCoinListScreen(
         uiState = CryptoCoinListState(
+            cryptoCoinList = getCryptoCoinList()
+        ),
+        onEvent = { }
+    )
+}
+
+@ExperimentalMaterial3Api
+@Composable
+@Preview
+private fun CryptoCoinScreenLoadingPreview() {
+    CryptoCoinListScreen(
+        uiState = CryptoCoinListState(
+            isLoading = true,
+            cryptoCoinList = getCryptoCoinList()
+        ),
+        onEvent = { }
+    )
+}
+
+@ExperimentalMaterial3Api
+@Composable
+@Preview
+private fun CryptoCoinScreenErrorPreview() {
+    CryptoCoinListScreen(
+        uiState = CryptoCoinListState(
             isError = true,
             cryptoCoinList = getCryptoCoinList()
         ),
