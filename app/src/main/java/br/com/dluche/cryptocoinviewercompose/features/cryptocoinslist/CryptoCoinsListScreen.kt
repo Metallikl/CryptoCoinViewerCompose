@@ -2,9 +2,6 @@ package br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist
 
 import android.content.res.Configuration
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,20 +24,16 @@ import androidx.compose.material.icons.outlined.Casino
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.GeneratingTokens
 import androidx.compose.material.icons.outlined.MonetizationOn
-import androidx.compose.material.icons.outlined.QueryStats
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,7 +42,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -70,13 +62,16 @@ import org.koin.androidx.compose.koinViewModel
 
 @ExperimentalMaterial3Api
 @Composable
-fun CryptoCoinListRoute() {
+fun CryptoCoinListRoute(
+    onCryptoCoinClick: (String) -> Unit
+) {
     val viewmodel = koinViewModel<CryptoCoinListViewModel>()
     val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
 
     CryptoCoinListScreen(
         uiState = uiState,
-        onEvent = viewmodel::onEvent
+        onEvent = viewmodel::onEvent,
+        onCryptoCoinClick = onCryptoCoinClick
     )
 }
 
@@ -85,7 +80,8 @@ fun CryptoCoinListRoute() {
 @Composable
 fun CryptoCoinListScreen(
     uiState: CryptoCoinListState,
-    onEvent: (CryptoCoinListEvent) -> Unit
+    onEvent: (CryptoCoinListEvent) -> Unit,
+    onCryptoCoinClick: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -118,7 +114,8 @@ fun CryptoCoinListScreen(
                 else -> {
                     CryptoCoinListContent(
                         uiState = uiState,
-                        onEvent = onEvent
+                        onEvent = onEvent,
+                        onCryptoCoinClick = onCryptoCoinClick
                     )
                 }
             }
@@ -146,6 +143,7 @@ fun CryptoCoinListLoadingContent(
 private fun CryptoCoinListContent(
     uiState: CryptoCoinListState,
     onEvent: (CryptoCoinListEvent) -> Unit,
+    onCryptoCoinClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -184,7 +182,12 @@ private fun CryptoCoinListContent(
                 items =  uiState.cryptoCoinList,
                 key = { it.id }//adicionado um id para evitar recomposição desnecessária.Funciona com diff
             ) { coin ->
-                CryptoCoinCell(coin)
+                CryptoCoinCell(
+                    coin = coin,
+                    Modifier.clickable {
+                        onCryptoCoinClick(coin.id)
+                    }
+                )
             }
         }
     }
@@ -378,7 +381,8 @@ private fun CryptoCoinScreenPreview() {
         uiState = CryptoCoinListState(
             cryptoCoinList = getCryptoCoinList()
         ),
-        onEvent = { }
+        onEvent = { },
+        onCryptoCoinClick = {  },
     )
 }
 
@@ -391,7 +395,8 @@ private fun CryptoCoinScreenLoadingPreview() {
             isLoading = true,
             cryptoCoinList = getCryptoCoinList()
         ),
-        onEvent = { }
+        onEvent = { },
+        onCryptoCoinClick = {  }
     )
 }
 
@@ -404,7 +409,8 @@ private fun CryptoCoinScreenErrorPreview() {
             isError = true,
             cryptoCoinList = getCryptoCoinList()
         ),
-        onEvent = { }
+        onEvent = { },
+        onCryptoCoinClick = {  }
     )
 }
 

@@ -38,6 +38,19 @@ import br.com.dluche.cryptocoinviewercompose.domain.model.CryptoCoinDetails
 import br.com.dluche.cryptocoinviewercompose.domain.model.Tag
 import br.com.dluche.cryptocoinviewercompose.domain.model.Team
 import coil.compose.AsyncImage
+import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.viewmodel.factory.KoinViewModelFactory
+
+
+@ExperimentalLayoutApi
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CryptoCoinDetailRoute(coinId: String){
+     val viewModel = koinViewModel<CryptoCoinDetailViewModel>()
+
+    CryptoCoinDetailScreen(mockCoinDetails(coinId))
+}
+
 
 
 @ExperimentalLayoutApi
@@ -168,9 +181,9 @@ fun CryptoCoinDetailScreenPreview() {
     CryptoCoinDetailScreen(mockCoinDetails())
 }
 
-private fun mockCoinDetails(): CryptoCoinDetails {
+private fun mockCoinDetails(coinId: String = "BitCoin"): CryptoCoinDetails {
     return CryptoCoinDetails(
-        name = "BitCoin",
+        name = coinId,
         logo = "https://picsum.photos/200",
         description = "Lerem ipson Lerem ipson Lerem ipson Lerem ipson Lerem ipson Lerem ipson Lerem ipson Lerem ipson Lerem ipson Lerem ipson Lerem ipson Lerem ipson Lerem ipson Lerem ipson ",
         tags = mockTags(),
