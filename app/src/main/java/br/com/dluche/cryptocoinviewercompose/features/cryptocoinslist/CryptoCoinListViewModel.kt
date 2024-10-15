@@ -1,5 +1,6 @@
 package br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.dluche.cryptocoinviewercompose.common.AppCoroutinesDispatchers
@@ -51,9 +52,14 @@ class CryptoCoinListViewModel(
 
     private fun fetchCoinsList() {
         viewModelScope.launch(dispatchers.io()) {
-            _uiState.update {
-                CryptoCoinListState(
-                    isLoading = true
+            _uiState.update { curState ->
+                curState.copy(
+                    isLoading = true,
+                    isError = false,
+                    isLoadingNextPage = false,
+                    isErrorNextPage = false,
+                    message = String.emptyString(),
+                    cryptoCoinList = emptyList()
                 )
             }
             getCoins(forceReset = true).collect { result ->
@@ -80,6 +86,7 @@ class CryptoCoinListViewModel(
             ).collect { result ->
                 when (result) {
                     is EitherResult.Error -> {
+                        Log.d("CryptoCoinListVm", "NextPageError")
                         _uiState.update {
                             it.copy(
                                 isLoading = false,
@@ -93,6 +100,7 @@ class CryptoCoinListViewModel(
                     }
 
                     is EitherResult.Success -> {
+                        Log.d("CryptoCoinListVm", "NextPageSuccess")
                         _uiState.update { curState ->
                             curState.copy(
                                 isLoading = false,
@@ -122,6 +130,7 @@ class CryptoCoinListViewModel(
             ).collect { result ->
                 when (result) {
                     is EitherResult.Error -> {
+                        Log.d("CryptoCoinListVm", "NextPageError\n ${result.error.message.orEmpty()}")
                         _uiState.update { curState ->
                             curState.copy(
                                 isLoading = false,
@@ -141,7 +150,12 @@ class CryptoCoinListViewModel(
                                     it.addAll(result.data)
                                 }
                             //
-                            CryptoCoinListState(
+                            Log.d("CryptoCoinListVm", "NextPageSuccess\n ${result.data}")
+                            state.copy(
+                                isLoading = false,
+                                isError = false,
+                                isLoadingNextPage = false,
+                                isErrorNextPage = false,
                                 search = state.search,
                                 cryptoCoinList = newCoinList.toList(),
                             )

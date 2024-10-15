@@ -1,6 +1,7 @@
 package br.com.dluche.cryptocoinviewercompose.features.cryptocoinslist
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -171,6 +172,7 @@ private fun CryptoCoinListContent(
         LaunchedEffect(key1 = isLastItemVisible) {
             if (isLastItemVisible && !isLoadingSomething) {
                 onEvent(LoadNextPage)
+                Log.d("CryptoCoinListContent", "load next page")
             }
         }
 
@@ -178,7 +180,10 @@ private fun CryptoCoinListContent(
             state = listState,
             modifier = Modifier.padding(16.dp),
         ) {
-            items(uiState.cryptoCoinList) { coin ->
+            items(
+                items =  uiState.cryptoCoinList,
+                key = { it.id }//adicionado um id para evitar recomposição desnecessária.Funciona com diff
+            ) { coin ->
                 CryptoCoinCell(coin)
             }
         }
