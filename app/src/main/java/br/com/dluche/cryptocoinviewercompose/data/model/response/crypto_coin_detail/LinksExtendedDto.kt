@@ -2,14 +2,15 @@ package br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_de
 
 
 import br.com.dluche.cryptocoinviewercompose.extentions.emptyString
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.google.gson.annotations.SerializedName
-
+@Serializable
 data class LinksExtendedDto(
-    @SerializedName("stats")
+    @SerialName("stats")
     val stats: Stats = Stats(),
-    @SerializedName("type")
+    @SerialName("type")
     val type: String? = String.emptyString(),
-    @SerializedName("url")
+    @SerialName("url")
     val url: String? = String.emptyString()
 )

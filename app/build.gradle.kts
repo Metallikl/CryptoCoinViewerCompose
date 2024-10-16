@@ -78,6 +78,7 @@ dependencies {
     implementation(platform(libs.okhttp.bom))
     implementation(libs.coil)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.slf4j.simple.logger)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

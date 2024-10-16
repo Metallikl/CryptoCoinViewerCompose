@@ -1,13 +1,15 @@
 package br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_detail
 
 import br.com.dluche.cryptocoinviewercompose.extentions.emptyString
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TeamDto(
-    @SerializedName("id")
+    @SerialName("id")
     val id: String? = String.emptyString(),
-    @SerializedName("name")
+    @SerialName("name")
     val name: String? = String.emptyString(),
-    @SerializedName("position")
+    @SerialName("position")
     val position: String? = String.emptyString()
 )

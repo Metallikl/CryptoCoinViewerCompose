@@ -3,6 +3,7 @@ package br.com.dluche.cryptocoinviewercompose.data.service
 import br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin.CryptoCoinDto
 import br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_detail.CryptoDetailsDto
 import br.com.dluche.cryptocoinviewercompose.data.service.PaprikaCoinRoutes.COINS_LIST
+import br.com.dluche.cryptocoinviewercompose.data.service.PaprikaCoinRoutes.getCoinDetailById
 import br.com.dluche.cryptocoinviewercompose.data.service.PaprikaCoinRoutes.getCoinListUrl
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -16,10 +17,6 @@ class PaprikaCoinServiceImpl(
     }
 
     override suspend fun getCoinDetail(coinId: String): CryptoDetailsDto {
-        return httpClient.get {
-                url {
-                    getCoinListUrl()
-                }
-            }.body<CryptoDetailsDto>()
+        return httpClient.get(getCoinDetailById(coinId)).body<CryptoDetailsDto>()
     }
 }

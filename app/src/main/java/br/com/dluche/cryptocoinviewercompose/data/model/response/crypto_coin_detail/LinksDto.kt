@@ -1,19 +1,20 @@
 package br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_detail
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.google.gson.annotations.SerializedName
-
+@Serializable
 data class LinksDto(
-    @SerializedName("explorer")
+    @SerialName("explorer")
     val explorer: List<String>? = listOf(),
-    @SerializedName("facebook")
+    @SerialName("facebook")
     val facebook: List<String>? = listOf(),
-    @SerializedName("reddit")
+    @SerialName("reddit")
     val reddit: List<String>? = listOf(),
-    @SerializedName("source_code")
+    @SerialName("source_code")
     val sourceCode: List<String>? = listOf(),
-    @SerializedName("website")
+    @SerialName("website")
     val website: List<String>? = listOf(),
-    @SerializedName("youtube")
+    @SerialName("youtube")
     val youtube: List<String>? = listOf()
 )

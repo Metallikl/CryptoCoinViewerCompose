@@ -1,15 +1,16 @@
 package br.com.dluche.cryptocoinviewercompose.data.model.response.crypto_coin_detail
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.google.gson.annotations.SerializedName
-
+@Serializable
 data class Stats(
-    @SerializedName("contributors")
+    @SerialName("contributors")
     val contributors: Int? = 0,
-    @SerializedName("followers")
+    @SerialName("followers")
     val followers: Int? = 0,
-    @SerializedName("stars")
+    @SerialName("stars")
     val stars: Int? = 0,
-    @SerializedName("subscribers")
+    @SerialName("subscribers")
     val subscribers: Int? = 0
 )
