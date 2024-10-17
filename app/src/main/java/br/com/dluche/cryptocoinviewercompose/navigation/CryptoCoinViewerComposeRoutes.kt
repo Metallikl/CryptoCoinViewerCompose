@@ -7,5 +7,5 @@ sealed interface CryptoCoinViewerComposeRoutes {
     data object CryptoCoinList : CryptoCoinViewerComposeRoutes
 
     @Serializable
-    data class CryptoCoinDetail(val id: String) : CryptoCoinViewerComposeRoutes
+    data class CryptoCoinDetail(val coinId: String) : CryptoCoinViewerComposeRoutes
 }

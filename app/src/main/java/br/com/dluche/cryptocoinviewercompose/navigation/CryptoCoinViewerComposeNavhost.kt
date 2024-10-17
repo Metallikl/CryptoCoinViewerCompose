@@ -31,7 +31,7 @@ fun CryptoCoinViewerComposeNavHost() {
 
         composable<CryptoCoinDetail> { backStackEntry ->
             val coinId = backStackEntry.toRoute<CryptoCoinDetail>()
-            CryptoCoinDetailRoute(coinId.id)
+            CryptoCoinDetailRoute(coinId.coinId)
         }
     }
 }

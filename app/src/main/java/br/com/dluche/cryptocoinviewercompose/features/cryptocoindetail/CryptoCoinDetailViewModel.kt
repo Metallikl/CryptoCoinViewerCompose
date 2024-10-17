@@ -23,7 +23,7 @@ class CryptoCoinDetailViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        savedStateHandle.get<String>("id")?.let { coinId ->
+        savedStateHandle.get<String>("coinId")?.let { coinId ->
             getCoinDetails(coinId)
         }
     }
